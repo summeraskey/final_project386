@@ -1,10 +1,52 @@
 [
   {
-    "objectID": "Tutorial.html",
-    "href": "Tutorial.html",
-    "title": "Getting Started",
+    "objectID": "TechnicalReport.html",
+    "href": "TechnicalReport.html",
+    "title": "Technical Report",
     "section": "",
-    "text": "Here is how you use my package:\n\nfrom final_project_demo import add\n\nprint(add(2, 19))\n\n21\n\n\n\nfrom final_project_demo import run_analysis_pipeline, run_cleaning_pipeling\n\nrun_cleaning_pipeling()\nrun_analysis_pipeline()\n\nRunning cleaning pipeline...\nRunning analysis pipeline..."
+    "text": "TODO: Provide a concise overview of the project objectives, key findings, and actionable recommendations."
+  },
+  {
+    "objectID": "TechnicalReport.html#executive-summary",
+    "href": "TechnicalReport.html#executive-summary",
+    "title": "Technical Report",
+    "section": "",
+    "text": "TODO: Provide a concise overview of the project objectives, key findings, and actionable recommendations."
+  },
+  {
+    "objectID": "TechnicalReport.html#project-context",
+    "href": "TechnicalReport.html#project-context",
+    "title": "Technical Report",
+    "section": "Project Context",
+    "text": "Project Context\nTODO: Describe the motivation, stakeholders, and success criteria for this analysis."
+  },
+  {
+    "objectID": "TechnicalReport.html#data-sources",
+    "href": "TechnicalReport.html#data-sources",
+    "title": "Technical Report",
+    "section": "Data Sources",
+    "text": "Data Sources\n\nPrimary dataset: TODO - name and link\nSupplementary data: TODO - describe any external references\nData access notes: TODO - mention licenses or refresh cadence"
+  },
+  {
+    "objectID": "TechnicalReport.html#methodology",
+    "href": "TechnicalReport.html#methodology",
+    "title": "Technical Report",
+    "section": "Methodology",
+    "text": "Methodology\n\nData acquisition: TODO - outline collection scripts/APIs\nCleaning pipeline: TODO - summarize transformations and validations implemented\nAnalysis workflow: TODO - describe statistical or modeling techniques\nTooling: TODO - list packages, environments, and reproducibility steps"
+  },
+  {
+    "objectID": "TechnicalReport.html#results-diagnostics",
+    "href": "TechnicalReport.html#results-diagnostics",
+    "title": "Technical Report",
+    "section": "Results & Diagnostics",
+    "text": "Results & Diagnostics\nTODO: Summarize the main metrics, charts, or model diagnostics produced. Include links to figures or tables once available."
+  },
+  {
+    "objectID": "TechnicalReport.html#discussion-next-steps",
+    "href": "TechnicalReport.html#discussion-next-steps",
+    "title": "Technical Report",
+    "section": "Discussion & Next Steps",
+    "text": "Discussion & Next Steps\nTODO: Interpret the results, note limitations, and capture open questions or future experiments."
   },
   {
     "objectID": "Documentation.html",
@@ -14,10 +56,17 @@
     "text": "Functions:"
   },
   {
+    "objectID": "Tutorial.html",
+    "href": "Tutorial.html",
+    "title": "Getting Started",
+    "section": "",
+    "text": "Here is how you use my package:\n\nfrom final_project_demo import add\n\nprint(add(2, 19))\n\n21\n\n\n\nfrom final_project_demo import run_analysis_pipeline, run_cleaning_pipeling\n\nrun_cleaning_pipeling()\nrun_analysis_pipeline()\n\nRunning cleaning pipeline...\nRunning analysis pipeline..."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "My Python Package!",
+    "title": "STAT 386 Final Project",
     "section": "",
-    "text": "Here is a website all about my package for STAT 386!\nDocumentation here.\nGet started here."
+    "text": "Youtube Performance Analysis: A Comprehensive Analysis of Trends and Patterns\nBy: Jane Gustafson and Summer Price\n\n\n\n\n\nOur project focuses on analyzing the factors that influence whether YouTube videos become trending. Using the Kaggle Trending YouTube Videos dataset, we examine patterns in video engagement such as views, likes, and comments, along with channel-level characteristics that may contribute to a video’s popularity. To strengthen our analysis, we incorporated additional data collected through the YouTube Data API and merged it with the original dataset to create a more complete view of video and channel behavior. Through exploratory data analysis and visualization, we aim to identify the key features most strongly associated with video virality and better understand what drives content to trend on YouTube.\nClick the links below to view our documentation, tutorial, and results report.\nStreamlit Interactive app #INPUT HERE#\nDocumentation here.\nTutorial here.\nTechnical Report here."
   }
 ]

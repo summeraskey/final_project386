@@ -1,11 +1,20 @@
 ---
-title: "My Python Package!"
+title: "STAT 386 Final Project"
 ---
+**Youtube Performance Analysis: A Comprehensive Analysis of Trends and Patterns**
 
-Here is a website all about my package for STAT 386!
+By: Jane Gustafson and Summer Price
+
+![](docs/youtube.png){fig-align="center" width=60%}
+
+Our project focuses on analyzing the factors that influence whether YouTube videos become trending. Using the Kaggle Trending YouTube Videos dataset, we examine patterns in video engagement such as views, likes, and comments, along with channel-level characteristics that may contribute to a video’s popularity. To strengthen our analysis, we incorporated additional data collected through the YouTube Data API and merged it with the original dataset to create a more complete view of video and channel behavior. Through exploratory data analysis and visualization, we aim to identify the key features most strongly associated with video virality and better understand what drives content to trend on YouTube. 
+
+Click the links below to view our documentation, tutorial, and results report. 
+
+Streamlit Interactive app #INPUT HERE#
 
 Documentation [here](Documentation.qmd).
 
-Get started [here](Tutorial.qmd).
+Tutorial [here](Tutorial.qmd).
 
-Review the [technical report](TechnicalReport.qmd).
+Technical Report [here](TechnicalReport.qmd).
