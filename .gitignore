@@ -13,3 +13,17 @@ wheels/
 /docs/site_libs/
 .env
 **/*.quarto_ipynb
+
+# Data files
+src/final_project_demo/data/*.csv
+src/final_project_demo/data/*.json
+
+.env
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+*.csv
+*.json
+*.parquet
+.DS_Store
+src/final_project_demo/data/
