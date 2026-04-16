@@ -11,6 +11,8 @@ Our project focuses on analyzing the factors that influence whether YouTube vide
 
 Click the links below to view our documentation, tutorial, and results report. 
 
+GitHub Repository [here](https://github.com/summeraskey/final_project386).
+
 Streamlit Interactive app #INPUT HERE#
 
 Documentation [here](Documentation.qmd).

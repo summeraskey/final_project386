@@ -61,7 +61,3 @@ def run_cleaning_pipeline():
     df = clean_data(df)
     print(f"Done! Shape: {df.shape}")
     return df
-
-
-from cleaning import run_cleaning_pipeline
-df = run_cleaning_pipeline()

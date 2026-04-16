@@ -10,7 +10,6 @@ wheels/
 .venv
 
 /.quarto/
-/docs/site_libs/
 .env
 **/*.quarto_ipynb
 

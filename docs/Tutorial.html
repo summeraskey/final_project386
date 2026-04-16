@@ -178,7 +178,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Here is how you use my package:</p>
-<div id="724096ff" class="cell" data-execution_count="1">
+<div id="f0a8eb8f" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo <span class="im">import</span> add</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(add(<span class="dv">2</span>, <span class="dv">19</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -186,14 +186,138 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>21</code></pre>
 </div>
 </div>
-<div id="3cd52178" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo <span class="im">import</span> run_analysis_pipeline, run_cleaning_pipeling</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>run_cleaning_pipeling()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>run_analysis_pipeline()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="8e41e6e0" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo <span class="im">import</span> run_analysis_pipeline, run_cleaning_pipeline</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> run_cleaning_pipeline()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>run_analysis_pipeline(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Running cleaning pipeline...
-Running analysis pipeline...</code></pre>
+Done! Shape: (37095, 20)
+Running analysis pipeline...
+        view_growth   like_growth  comment_growth
+count  5.687000e+03  5.687000e+03    5.687000e+03
+mean   1.542205e+07  1.465119e+05    6.166406e+03
+std    1.177724e+08  8.550734e+05    6.674923e+04
+min   -3.979200e+05 -1.233300e+04   -1.205350e+05
+25%    2.437575e+05  2.795000e+03    3.100000e+01
+50%    1.200046e+06  1.627700e+04    5.100000e+02
+75%    4.824178e+06  7.050250e+04    2.524500e+03
+max    4.107044e+09  2.887943e+07    3.754182e+06
+                                                   title  view_growth
+58           Ed Sheeran - Perfect (Official Music Video)   4107044106
+34360              Maroon 5 - Girls Like You ft. Cardi B   3996222338
+534            Luis Fonsi, Demi Lovato - Échame La Culpa   2499369315
+28348               Billie Eilish - lovely (with Khalid)   2404753739
+27051  Becky G, Natti Natasha - Sin Pijama (Official ...   2312571640
+34181  Cardi B, Bad Bunny &amp; J Balvin - I Like It [Off...   1724702754
+1976   BTS (방탄소년단) 'MIC Drop (Steve Aoki Remix)' Offi...   1550611501
+9560         Calum Scott - You Are The Reason (Official)   1355778606
+32200                BTS (방탄소년단) 'FAKE LOVE' Official MV   1339905556
+27052               Ariana Grande - No Tears Left To Cry   1286350849</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/summerprice/Desktop/WINTER_26/STAT_386/final_project386/src/final_project_demo/analysis.py:18: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_unique["view_growth"] = df_unique["views_current"] - df_unique["views_2017"]
+/Users/summerprice/Desktop/WINTER_26/STAT_386/final_project386/src/final_project_demo/analysis.py:19: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_unique["like_growth"] = df_unique["likes_current"] - df_unique["likes_2017"]
+/Users/summerprice/Desktop/WINTER_26/STAT_386/final_project386/src/final_project_demo/analysis.py:20: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_unique["comment_growth"] = df_unique["comments_current"] - df_unique["comments_2017"]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial_files/figure-html/cell-3-output-3.png" width="816" height="451" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial_files/figure-html/cell-3-output-4.png" width="825" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial_files/figure-html/cell-3-output-5.png" width="825" height="498" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial_files/figure-html/cell-3-output-6.png" width="1084" height="523" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/summerprice/Desktop/WINTER_26/STAT_386/final_project386/src/final_project_demo/analysis.py:73: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_unique["category"] = df_unique["category_id"].map(category_map)
+/Users/summerprice/Desktop/WINTER_26/STAT_386/final_project386/src/final_project_demo/analysis.py:74: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_unique["like_rate"] = df_unique["likes_current"] / df_unique["views_current"]
+/Users/summerprice/Desktop/WINTER_26/STAT_386/final_project386/src/final_project_demo/analysis.py:75: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_unique["comment_rate"] = df_unique["comments_current"] / df_unique["views_current"]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial_files/figure-html/cell-3-output-8.png" width="1084" height="523" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>count    5687.000000
+mean       19.877616
+std       200.107527
+min        -1.000000
+25%         0.000000
+50%         1.000000
+75%         2.000000
+max      3562.000000
+Name: time_to_trend, dtype: float64</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/summerprice/Desktop/WINTER_26/STAT_386/final_project386/src/final_project_demo/analysis.py:88: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_unique["time_to_trend"] = (df_unique["trending_date"] - df_unique["publish_time"].dt.tz_localize(None)).dt.days</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial_files/figure-html/cell-3-output-11.png" width="825" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis complete!</code></pre>
 </div>
 </div>
 

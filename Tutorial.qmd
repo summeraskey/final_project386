@@ -13,8 +13,7 @@ print(add(2, 19))
 
 
 ```{python}
-from final_project_demo import run_analysis_pipeline, run_cleaning_pipeling
-
-run_cleaning_pipeling()
-run_analysis_pipeline()
+from final_project_demo import run_analysis_pipeline, run_cleaning_pipeline
+df = run_cleaning_pipeline()
+run_analysis_pipeline(df)
 ```
