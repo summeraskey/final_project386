@@ -21,4 +21,4 @@ Tutorial [here](Tutorial.qmd).
 
 Technical Report [here](TechnicalReport.qmd).
 
-Python Packaage [here](https://pypi.org/project/final-project-demo/0.1.0/).
+Python Package [here](https://pypi.org/project/final-project-demo/0.1.0/).
