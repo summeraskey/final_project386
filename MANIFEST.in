@@ -1,0 +1,3 @@
+exclude src/final_project_demo/data/*
+exclude src/final_project_demo/*.png
+exclude src/final_project_demo/*.ipynb

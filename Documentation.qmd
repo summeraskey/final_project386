@@ -1,5 +1,115 @@
 ---
 title: "Documentation"
+description: "Function reference for the final_project_demo package"
 ---
 
-Functions:
+This page walks through the process of each function in our package, covering how we collected the data, cleaned and merged it into a single dataset, and performed our analysis. The package has two main modules: `cleaning.py` which handles data acquisition and preparation, and `analysis.py` which handles all exploratory analysis and predictive modeling.
+
+Before using the package, make sure your `.env` file contains the following keys:
+
+YOUTUBE_API_KEY=your_youtube_api_key
+KAGGLE_USERNAME=your_kaggle_username
+KAGGLE_KEY=your_kaggle_api_key
+
+## Data Collection
+
+The first part of the pipeline focuses on pulling in our two data sources — the Kaggle YouTube Trending Videos dataset and live data from the YouTube Data API. The Kaggle dataset contains historical trending video data from November 2017 through June 2018, including metadata like video title, channel, category, tags, and engagement counts at the time of trending. The YouTube Data API gives us current statistics for those same videos, allowing us to compare how they have performed over time.
+
+The `load_data()` function handles all of this. It downloads the Kaggle dataset using `kagglehub`, then queries the YouTube Data API for current view, like, and comment counts for each unique video ID in the dataset. Because the API only accepts 50 video IDs per request, the function loops through all 6,351 unique IDs in batches of 50, making 128 total API calls. It then merges both datasets on `video_id` using an inner join and returns the combined DataFrame.
+
+```python
+from final_project_demo.cleaning import load_data
+df = load_data()
+```
+
+## Cleaning the Data
+
+Once the data is loaded, `clean_data(df)` takes care of tidying it up. Because both datasets had columns with the same names (like `title`, `views`, and `likes`), the merge created duplicate columns with `_x` and `_y` suffixes. This function drops the redundant ones and renames the rest to something more descriptive — for example, `views_x` becomes `views_2017` and `views_y` becomes `views_current`. It also converts the three date columns (`trending_date`, `publish_time`, and `published`) from strings into proper datetime objects so we can do time-based analysis later.
+
+```python
+from final_project_demo.cleaning import clean_data
+df_clean = clean_data(df_raw)
+```
+
+The easiest way to run both steps together is through `run_cleaning_pipeline()`, which calls `load_data()` and `clean_data()` in sequence and returns the final cleaned DataFrame. This is the recommended entry point for anyone using the package.
+
+```python
+from final_project_demo import run_cleaning_pipeline
+df = run_cleaning_pipeline()
+```
+
+## Exploratory Data Analysis
+
+With a clean dataset in hand, the analysis module provides five EDA functions that explore different aspects of the data.
+
+`growth_analysis(df)` looks at how much each video has grown since 2017 by computing the difference in views, likes, and comments between the Kaggle snapshot and the current API data. It deduplicates the dataset to one row per video, prints summary statistics and the top 10 most-grown videos, and saves a histogram of the view growth distribution.
+
+```python
+from final_project_demo.analysis import growth_analysis
+df_unique = growth_analysis(df)
+```
+
+`trending_patterns(df)` analyzes when videos tend to trend. It breaks down trending frequency by day of the week and by month, producing two bar charts. This helps us understand whether the timing of a video's appearance on the trending list follows any patterns.
+
+```python
+from final_project_demo.analysis import trending_patterns
+trending_patterns(df)
+```
+
+`category_analysis(df)` computes the average current view count for each of the 15 YouTube content categories and visualizes them as a horizontal bar chart, making it easy to see which types of content accumulate the most views over time.
+
+```python
+from final_project_demo.analysis import category_analysis
+category_analysis(df)
+```
+
+`engagement_analysis(df)` goes a step further by computing the like rate (likes divided by views) for each category. This tells us not just which categories get the most views, but which ones generate the most active engagement from their audiences.
+
+```python
+from final_project_demo.analysis import engagement_analysis
+engagement_analysis(df)
+```
+
+`time_to_trend_analysis(df)` calculates how many days passed between a video's publish date and its first appearance on the trending list. It prints summary statistics and saves a histogram clipped at 30 days, giving a clear picture of how quickly videos typically get picked up by YouTube's algorithm.
+
+```python
+from final_project_demo.analysis import time_to_trend_analysis
+time_to_trend_analysis(df)
+```
+
+## Predictive Modeling
+
+The modeling section of the package contains three Random Forest regression models, each targeting a different measure of video success. All three log-transform their target variable using `np.log1p()` to handle the skewed distributions common in social media data, and all use an 80/20 train/test split with `random_state=42` for reproducibility.
+
+`predict_current_views(df)` trains Model 1, which predicts a video's current view count based on its 2017 engagement metrics — specifically likes, dislikes, comments, category, and whether comments or ratings were disabled. This answers the question of whether early engagement signals can predict long term viewership. The function prints the R² score and MAE, saves a predicted vs. actual scatter plot and a feature importance chart, and returns the trained model.
+
+```python
+from final_project_demo.analysis import predict_current_views
+model1 = predict_current_views(df)
+```
+
+`predict_time_to_trend(df)` trains Model 2, which predicts how quickly a video trends after being published. In addition to the engagement metrics from Model 1, this model also uses the hour and day of the week the video was published, since publish timing might influence how quickly the algorithm picks it up. The function saves the same predicted vs. actual and feature importance plots for this model.
+
+```python
+from final_project_demo.analysis import predict_time_to_trend
+model2 = predict_time_to_trend(df)
+```
+
+`predict_view_growth(df)` trains Model 3, which predicts how much a video's view count has grown since 2017. The features here are the video's original 2017 stats (views, likes, comments, category) plus its time to trend, testing whether videos that trended quickly also grew more over time. Like the others, it saves predicted vs. actual and feature importance visualizations and returns the trained model.
+
+```python
+from final_project_demo.analysis import predict_view_growth
+model3 = predict_view_growth(df)
+```
+
+## Running the Full Pipeline
+
+To run everything — all five EDA functions and all three models — in a single call, use `run_analysis_pipeline(df)`. This is the recommended way to reproduce the full analysis.
+
+```python
+from final_project_demo import run_cleaning_pipeline, run_analysis_pipeline
+df = run_cleaning_pipeline()
+run_analysis_pipeline(df)
+```
+
+

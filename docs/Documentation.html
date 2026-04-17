@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Function reference for the final_project_demo package">
 
-<title>Documentation – website</title>
+<title>Documentation – YouTube Performance Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -40,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-409dfb5c0e5108e9e5736a66dc2c05e7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -81,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">website</span>
+    <span class="navbar-title">YouTube Performance Analysis</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -117,8 +153,18 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data-collection" id="toc-data-collection" class="nav-link active" data-scroll-target="#data-collection">Data Collection</a></li>
+  <li><a href="#cleaning-the-data" id="toc-cleaning-the-data" class="nav-link" data-scroll-target="#cleaning-the-data">Cleaning the Data</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
+  <li><a href="#predictive-modeling" id="toc-predictive-modeling" class="nav-link" data-scroll-target="#predictive-modeling">Predictive Modeling</a></li>
+  <li><a href="#running-the-full-pipeline" id="toc-running-the-full-pipeline" class="nav-link" data-scroll-target="#running-the-full-pipeline">Running the Full Pipeline</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -128,6 +174,11 @@ ul.task-list li input[type="checkbox"] {
 <h1 class="title">Documentation</h1>
 </div>
 
+<div>
+  <div class="description">
+    Function reference for the final_project_demo package
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -142,9 +193,66 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Functions:</p>
+<p>This page walks through the process of each function in our package, covering how we collected the data, cleaned and merged it into a single dataset, and performed our analysis. The package has two main modules: <code>cleaning.py</code> which handles data acquisition and preparation, and <code>analysis.py</code> which handles all exploratory analysis and predictive modeling.</p>
+<p>Before using the package, make sure your <code>.env</code> file contains the following keys:</p>
+<p>YOUTUBE_API_KEY=your_youtube_api_key KAGGLE_USERNAME=your_kaggle_username KAGGLE_KEY=your_kaggle_api_key</p>
+<section id="data-collection" class="level2">
+<h2 class="anchored" data-anchor-id="data-collection">Data Collection</h2>
+<p>The first part of the pipeline focuses on pulling in our two data sources — the Kaggle YouTube Trending Videos dataset and live data from the YouTube Data API. The Kaggle dataset contains historical trending video data from November 2017 through June 2018, including metadata like video title, channel, category, tags, and engagement counts at the time of trending. The YouTube Data API gives us current statistics for those same videos, allowing us to compare how they have performed over time.</p>
+<p>The <code>load_data()</code> function handles all of this. It downloads the Kaggle dataset using <code>kagglehub</code>, then queries the YouTube Data API for current view, like, and comment counts for each unique video ID in the dataset. Because the API only accepts 50 video IDs per request, the function loops through all 6,351 unique IDs in batches of 50, making 128 total API calls. It then merges both datasets on <code>video_id</code> using an inner join and returns the combined DataFrame.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.cleaning <span class="im">import</span> load_data</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> load_data()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="cleaning-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-the-data">Cleaning the Data</h2>
+<p>Once the data is loaded, <code>clean_data(df)</code> takes care of tidying it up. Because both datasets had columns with the same names (like <code>title</code>, <code>views</code>, and <code>likes</code>), the merge created duplicate columns with <code>_x</code> and <code>_y</code> suffixes. This function drops the redundant ones and renames the rest to something more descriptive — for example, <code>views_x</code> becomes <code>views_2017</code> and <code>views_y</code> becomes <code>views_current</code>. It also converts the three date columns (<code>trending_date</code>, <code>publish_time</code>, and <code>published</code>) from strings into proper datetime objects so we can do time-based analysis later.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.cleaning <span class="im">import</span> clean_data</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> clean_data(df_raw)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The easiest way to run both steps together is through <code>run_cleaning_pipeline()</code>, which calls <code>load_data()</code> and <code>clean_data()</code> in sequence and returns the final cleaned DataFrame. This is the recommended entry point for anyone using the package.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo <span class="im">import</span> run_cleaning_pipeline</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> run_cleaning_pipeline()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<p>With a clean dataset in hand, the analysis module provides five EDA functions that explore different aspects of the data.</p>
+<p><code>growth_analysis(df)</code> looks at how much each video has grown since 2017 by computing the difference in views, likes, and comments between the Kaggle snapshot and the current API data. It deduplicates the dataset to one row per video, prints summary statistics and the top 10 most-grown videos, and saves a histogram of the view growth distribution.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.analysis <span class="im">import</span> growth_analysis</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_unique <span class="op">=</span> growth_analysis(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>trending_patterns(df)</code> analyzes when videos tend to trend. It breaks down trending frequency by day of the week and by month, producing two bar charts. This helps us understand whether the timing of a video’s appearance on the trending list follows any patterns.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.analysis <span class="im">import</span> trending_patterns</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>trending_patterns(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>category_analysis(df)</code> computes the average current view count for each of the 15 YouTube content categories and visualizes them as a horizontal bar chart, making it easy to see which types of content accumulate the most views over time.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.analysis <span class="im">import</span> category_analysis</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>category_analysis(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>engagement_analysis(df)</code> goes a step further by computing the like rate (likes divided by views) for each category. This tells us not just which categories get the most views, but which ones generate the most active engagement from their audiences.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.analysis <span class="im">import</span> engagement_analysis</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>engagement_analysis(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>time_to_trend_analysis(df)</code> calculates how many days passed between a video’s publish date and its first appearance on the trending list. It prints summary statistics and saves a histogram clipped at 30 days, giving a clear picture of how quickly videos typically get picked up by YouTube’s algorithm.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.analysis <span class="im">import</span> time_to_trend_analysis</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>time_to_trend_analysis(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="predictive-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="predictive-modeling">Predictive Modeling</h2>
+<p>The modeling section of the package contains three Random Forest regression models, each targeting a different measure of video success. All three log-transform their target variable using <code>np.log1p()</code> to handle the skewed distributions common in social media data, and all use an 80/20 train/test split with <code>random_state=42</code> for reproducibility.</p>
+<p><code>predict_current_views(df)</code> trains Model 1, which predicts a video’s current view count based on its 2017 engagement metrics — specifically likes, dislikes, comments, category, and whether comments or ratings were disabled. This answers the question of whether early engagement signals can predict long term viewership. The function prints the R² score and MAE, saves a predicted vs.&nbsp;actual scatter plot and a feature importance chart, and returns the trained model.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.analysis <span class="im">import</span> predict_current_views</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> predict_current_views(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>predict_time_to_trend(df)</code> trains Model 2, which predicts how quickly a video trends after being published. In addition to the engagement metrics from Model 1, this model also uses the hour and day of the week the video was published, since publish timing might influence how quickly the algorithm picks it up. The function saves the same predicted vs.&nbsp;actual and feature importance plots for this model.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.analysis <span class="im">import</span> predict_time_to_trend</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> predict_time_to_trend(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>predict_view_growth(df)</code> trains Model 3, which predicts how much a video’s view count has grown since 2017. The features here are the video’s original 2017 stats (views, likes, comments, category) plus its time to trend, testing whether videos that trended quickly also grew more over time. Like the others, it saves predicted vs.&nbsp;actual and feature importance visualizations and returns the trained model.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo.analysis <span class="im">import</span> predict_view_growth</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model3 <span class="op">=</span> predict_view_growth(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="running-the-full-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="running-the-full-pipeline">Running the Full Pipeline</h2>
+<p>To run everything — all five EDA functions and all three models — in a single call, use <code>run_analysis_pipeline(df)</code>. This is the recommended way to reproduce the full analysis.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> final_project_demo <span class="im">import</span> run_cleaning_pipeline, run_analysis_pipeline</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> run_cleaning_pipeline()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>run_analysis_pipeline(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Project summary, methodology, and findings placeholder">
+<meta name="description" content="YouTube Trending Video Analysis - Methodology and Findings">
 
-<title>Technical Report – website</title>
+<title>Technical Report – YouTube Performance Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-409dfb5c0e5108e9e5736a66dc2c05e7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -82,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">website</span>
+    <span class="navbar-title">YouTube Performance Analysis</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -126,8 +126,18 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive Summary</a></li>
   <li><a href="#project-context" id="toc-project-context" class="nav-link" data-scroll-target="#project-context">Project Context</a></li>
   <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">Data Sources</a></li>
-  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
-  <li><a href="#results-diagnostics" id="toc-results-diagnostics" class="nav-link" data-scroll-target="#results-diagnostics">Results &amp; Diagnostics</a></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a>
+  <ul class="collapse">
+  <li><a href="#data-acquisition" id="toc-data-acquisition" class="nav-link" data-scroll-target="#data-acquisition">1. Data Acquisition</a></li>
+  <li><a href="#cleaning-pipeline" id="toc-cleaning-pipeline" class="nav-link" data-scroll-target="#cleaning-pipeline">2. Cleaning Pipeline</a></li>
+  <li><a href="#analysis-workflow" id="toc-analysis-workflow" class="nav-link" data-scroll-target="#analysis-workflow">3. Analysis Workflow</a></li>
+  <li><a href="#tooling" id="toc-tooling" class="nav-link" data-scroll-target="#tooling">4. Tooling</a></li>
+  </ul></li>
+  <li><a href="#results-diagnostics" id="toc-results-diagnostics" class="nav-link" data-scroll-target="#results-diagnostics">Results &amp; Diagnostics</a>
+  <ul class="collapse">
+  <li><a href="#eda-findings" id="toc-eda-findings" class="nav-link" data-scroll-target="#eda-findings">EDA Findings</a></li>
+  <li><a href="#model-results" id="toc-model-results" class="nav-link" data-scroll-target="#model-results">Model Results</a></li>
+  </ul></li>
   <li><a href="#discussion-next-steps" id="toc-discussion-next-steps" class="nav-link" data-scroll-target="#discussion-next-steps">Discussion &amp; Next Steps</a></li>
   </ul>
 </nav>
@@ -142,7 +152,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div>
   <div class="description">
-    Project summary, methodology, and findings placeholder
+    YouTube Trending Video Analysis - Methodology and Findings
   </div>
 </div>
 
@@ -161,36 +171,187 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="executive-summary" class="level2">
 <h2 class="anchored" data-anchor-id="executive-summary">Executive Summary</h2>
-<p><em>TODO: Provide a concise overview of the project objectives, key findings, and actionable recommendations.</em></p>
+<p>This analysis investigates what drives YouTube video performance and virality using a combination of historical trending data and live API data. We merged the Kaggle YouTube Trending Videos dataset (covering trending videos from November 2017 to June 2018) with current video statistics pulled from the YouTube Data API to create a longitudinal dataset of thousands ofunique videos.</p>
+<p><strong>Key Findings:</strong></p>
+<ul>
+<li>Early likes are the strongest predictor of both current view count (71% feature importance) and long term view growth (62% feature importance)</li>
+<li>Music dominates in total views but not in engagement rate — People &amp; Blogs and Comedy have higher like-to-view ratios</li>
+<li>Most videos trend within 1-2 days of publishing; videos that don’t trend within a week almost never do</li>
+<li>Random forest models predicting current views and view growth achieved R² scores of 0.679 and 0.669 respectively, while predicting time to trend proved harder (R² = 0.274), reflecting the inherent unpredictability of viral timing</li>
+</ul>
 </section>
 <section id="project-context" class="level2">
 <h2 class="anchored" data-anchor-id="project-context">Project Context</h2>
-<p><em>TODO: Describe the motivation, stakeholders, and success criteria for this analysis.</em></p>
+<p><strong>Motivation:</strong> YouTube is the world’s largest video platform, yet the factors that drive a video to trend remain poorly understood. This project investigates whether early engagement signals can predict long term video success, and what content characteristics are associated with trending speed and view growth over time.</p>
+<p><strong>Stakeholders:</strong></p>
+<ul>
+<li>Content creators seeking to optimize upload strategy</li>
+<li>Brands and marketers evaluating YouTube as an advertising channel</li>
+<li>Data science students interested in social media analytics</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Successfully merge Kaggle historical data with live YouTube API data</li>
+<li>Build reproducible cleaning and analysis pipelines as Python packages</li>
+<li>Train predictive models with interpretable feature importances</li>
+<li>Produce visualizations suitable for both technical and non-technical audiences</li>
+</ul>
 </section>
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">Data Sources</h2>
 <ul>
-<li><em>Primary dataset:</em> <code>TODO - name and link</code></li>
-<li><em>Supplementary data:</em> <code>TODO - describe any external references</code></li>
-<li><em>Data access notes:</em> <code>TODO - mention licenses or refresh cadence</code></li>
+<li><strong>Primary dataset:</strong> <a href="https://www.kaggle.com/datasets/datasnaek/youtube-new">Kaggle YouTube Trending Videos Dataset</a> — 40,949 rows of US trending video data from November 2017 to June 2018, including video metadata, tags, view/like/comment counts at time of trending</li>
+<li><strong>Supplementary data:</strong> YouTube Data API v3 — used to fetch current view, like, and comment counts for each unique video ID in the Kaggle dataset</li>
+<li><strong>Data access notes:</strong> Kaggle dataset is publicly available under CC0 license. YouTube API requires a Google Cloud API key with a daily quota of 10,000 units. Data was collected in April 2026.</li>
 </ul>
 </section>
 <section id="methodology" class="level2">
 <h2 class="anchored" data-anchor-id="methodology">Methodology</h2>
-<ol type="1">
-<li><em>Data acquisition:</em> <code>TODO - outline collection scripts/APIs</code></li>
-<li><em>Cleaning pipeline:</em> <code>TODO - summarize transformations and validations implemented</code></li>
-<li><em>Analysis workflow:</em> <code>TODO - describe statistical or modeling techniques</code></li>
-<li><em>Tooling:</em> <code>TODO - list packages, environments, and reproducibility steps</code></li>
-</ol>
+<section id="data-acquisition" class="level3">
+<h3 class="anchored" data-anchor-id="data-acquisition">1. Data Acquisition</h3>
+<p>The Kaggle dataset was downloaded programmatically using the <code>kagglehub</code> Python library. The YouTube Data API was queried using the <code>google-api-python-client</code> library, fetching video statistics in batches of 50 (the API maximum per request) across 128 total API calls to cover all 6,351 unique video IDs. Both datasets were loaded into pandas DataFrames and merged on <code>video_id</code>.</p>
+</section>
+<section id="cleaning-pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="cleaning-pipeline">2. Cleaning Pipeline</h3>
+<p>The cleaning pipeline is implemented in <code>cleaning.py</code> and callable via <code>run_cleaning_pipeline()</code>. Key transformations include:</p>
+<ul>
+<li>Merged Kaggle and API DataFrames on <code>video_id</code> using an inner join, yielding 37,095 rows</li>
+<li>Renamed duplicate columns (<code>title_x/y</code>, <code>views_x/y</code>, <code>likes_x/y</code>) to descriptive names (<code>views_2017</code>, <code>views_current</code>, etc.)</li>
+<li>Converted <code>trending_date</code>, <code>publish_time</code>, and <code>published</code> to datetime objects</li>
+<li>663 videos from the Kaggle dataset returned no API results, indicating they were deleted or made private since 2017</li>
+</ul>
+</section>
+<section id="analysis-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="analysis-workflow">3. Analysis Workflow</h3>
+<p>The full analysis is implemented in <code>analysis.py</code> and callable via <code>run_analysis_pipeline(df)</code>. The workflow consists of two stages:</p>
+<p><strong>Exploratory Data Analysis:</strong></p>
+<ul>
+<li>Growth analysis: computed view, like, and comment growth for each unique video</li>
+<li>Trending patterns: analyzed trending frequency by day of week and month</li>
+<li>Category analysis: compared average views and engagement rates across 15 content categories</li>
+<li>Time to trend: calculated days between publish date and first trending appearance</li>
+</ul>
+<p><strong>Predictive Modeling:</strong></p>
+<p>Three Random Forest regression models were trained using scikit-learn:</p>
+<ul>
+<li><strong>Model 1</strong> — Predict current views from 2017 engagement metrics (likes, dislikes, comments, category). R² = 0.679</li>
+<li><strong>Model 2</strong> — Predict time to trend from engagement and publish timing features. R² = 0.274<br>
+</li>
+<li><strong>Model 3</strong> — Predict view growth (2017 to current) from initial engagement metrics. R² = 0.669</li>
+</ul>
+<p>All continuous targets were log-transformed using <code>np.log1p()</code> to handle skewed distributions. An 80/20 train/test split was used with <code>random_state=42</code> for reproducibility.</p>
+</section>
+<section id="tooling" class="level3">
+<h3 class="anchored" data-anchor-id="tooling">4. Tooling</h3>
+<ul>
+<li><code>pandas</code>, <code>numpy</code> — data manipulation</li>
+<li><code>google-api-python-client</code> — YouTube Data API v3</li>
+<li><code>kagglehub</code> — Kaggle dataset download</li>
+<li><code>scikit-learn</code> — Random Forest models, train/test split, evaluation metrics</li>
+<li><code>matplotlib</code>, <code>seaborn</code> — visualizations</li>
+<li><code>python-dotenv</code> — API key management</li>
+<li>Environment managed with <code>uv</code> and <code>.venv</code></li>
+<li>Full pipeline reproducible via <code>run_cleaning_pipeline()</code> and <code>run_analysis_pipeline(df)</code></li>
+</ul>
+</section>
 </section>
 <section id="results-diagnostics" class="level2">
 <h2 class="anchored" data-anchor-id="results-diagnostics">Results &amp; Diagnostics</h2>
-<p><em>TODO: Summarize the main metrics, charts, or model diagnostics produced. Include links to figures or tables once available.</em></p>
+<section id="eda-findings" class="level3">
+<h3 class="anchored" data-anchor-id="eda-findings">EDA Findings</h3>
+<p>View growth is heavily right-skewed — a small number of music videos (Ed Sheeran’s “Perfect”, Maroon 5’s “Girls Like You”) grew by over 4 billion views since 2017, while the median video grew by about 1.6 million views. Trending frequency was uniform across days of the week, suggesting YouTube’s algorithm does not favor any particular day. The dataset covers November 2017 through June 2018, so monthly patterns reflect dataset coverage rather than true seasonality.</p>
+<p>Music dominated average current views at over 1 billion per video — roughly 10x the next category (Film &amp; Animation). However, People &amp; Blogs had the highest like rate at 2.8%, suggesting stronger audience loyalty despite lower absolute view counts. Most videos trended within 1-2 days of publishing, with a sharp dropoff after day 5.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="growth_distribution.png" class="img-fluid figure-img"></p>
+<figcaption>Distribution of View Growth</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="views_by_category.png" class="img-fluid figure-img"></p>
+<figcaption>Average Views by Category</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="like_rate_by_category.png" class="img-fluid figure-img"></p>
+<figcaption>Like Rate by Category</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="trending_by_day.png" class="img-fluid figure-img"></p>
+<figcaption>Trending Videos by Day of Week</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="trending_by_month.png" class="img-fluid figure-img"></p>
+<figcaption>Trending Videos by Month</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="time_to_trend.png" class="img-fluid figure-img"></p>
+<figcaption>Days from Publishing to Trending</figcaption>
+</figure>
+</div>
+</section>
+<section id="model-results" class="level3">
+<h3 class="anchored" data-anchor-id="model-results">Model Results</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Target</th>
+<th>R²</th>
+<th>Top Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Model 1</td>
+<td>Current views</td>
+<td>0.679</td>
+<td>likes_2017 (71%)</td>
+</tr>
+<tr class="even">
+<td>Model 2</td>
+<td>Time to trend</td>
+<td>0.274</td>
+<td>comments_2017 (29%)</td>
+</tr>
+<tr class="odd">
+<td>Model 3</td>
+<td>View growth</td>
+<td>0.669</td>
+<td>likes_2017 (62%)</td>
+</tr>
+</tbody>
+</table>
+<p>Models 1 and 3 performed similarly well, both explaining roughly 67-68% of variance. Model 2 performed worse, reflecting that viral timing contains significant randomness that early metrics cannot fully capture.</p>
+<p><img src="model1_predicted_vs_actual.png" class="img-fluid" alt="Model 1: Predicted vs Actual Current Views"> <img src="model1_feature_importance.png" class="img-fluid" alt="Model 1: Feature Importance"></p>
+<p><img src="model2_predicted_vs_actual.png" class="img-fluid" alt="Model 2: Predicted vs Actual Time to Trend"> <img src="model2_feature_importance.png" class="img-fluid" alt="Model 2: Feature Importance"></p>
+<p><img src="model3_predicted_vs_actual.png" class="img-fluid" alt="Model 3: Predicted vs Actual View Growth"> <img src="model3_feature_importance.png" class="img-fluid" alt="Model 3: Feature Importance"></p>
+</section>
 </section>
 <section id="discussion-next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-next-steps">Discussion &amp; Next Steps</h2>
-<p><em>TODO: Interpret the results, note limitations, and capture open questions or future experiments.</em></p>
+<p><strong>Interpretation:</strong> The consistent dominance of early likes across both view prediction models suggests that YouTube’s recommendation algorithm heavily weights initial engagement signals. This is actionable for creators — maximizing early engagement in the first 24-48 hours after upload appears to be the most important factor for long term success. The lower R² for time to trend (0.274) suggests that while engagement helps, there is significant luck involved in when exactly a video gets picked up by the trending algorithm.</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>The Kaggle dataset only covers US trending videos from a 7-month window in 2017-2018, which may not reflect current YouTube algorithm behavior</li>
+<li>Videos deleted since 2017 are excluded, potentially introducing survivorship bias toward more successful content</li>
+<li>The dataset does not include thumbnail quality, title length, or description keywords, which may be important predictors</li>
+<li>Random Forest models are not easily interpretable beyond feature importance</li>
+</ul>
+<p><strong>Future Directions:</strong></p>
+<ul>
+<li>Incorporate NLP features from titles, tags, and descriptions</li>
+<li>Analyze channel-level effects — do established channels trend faster than new ones?</li>
+<li>Build a time series model to track how individual video trajectories evolve over weeks and months</li>
+</ul>
 
 
 </section>

@@ -5,18 +5,20 @@ title: "STAT 386 Final Project"
 
 By: Jane Gustafson and Summer Price
 
-![](docs/youtube.png){fig-align="center" width=60%}
+![](youtube.png){fig-align="center" width=60%}
 
-Our project focuses on analyzing the factors that influence whether YouTube videos become trending. Using the Kaggle Trending YouTube Videos dataset, we examine patterns in video engagement such as views, likes, and comments, along with channel-level characteristics that may contribute to a video’s popularity. To strengthen our analysis, we incorporated additional data collected through the YouTube Data API and merged it with the original dataset to create a more complete view of video and channel behavior. Through exploratory data analysis and visualization, we aim to identify the key features most strongly associated with video virality and better understand what drives content to trend on YouTube. 
+Our project focuses on analyzing the factors that influence whether YouTube videos become trending. Using the Kaggle Trending YouTube Videos dataset, we examine patterns in video engagement such as views, likes, and comments, along with channel-level characteristics that may contribute to a video’s popularity. Trending in theis context is define according to Youtube's own Charts framework that ranks videos based on a combination of factors such as view count, the rate at thich views are increasing, sources of traffic, video age, topic relevance, and performance relative to other uploads, rather than solely views. To strengthen our analysis, we incorporated additional data collected through the YouTube Data API and merged it with the original dataset to create a more complete view of video and channel behavior. Through exploratory data analysis and visualization, we aim to identify the key features most strongly associated with video virality and better understand what drives content to trend on YouTube. 
 
 Click the links below to view our documentation, tutorial, and results report. 
 
 GitHub Repository [here](https://github.com/summeraskey/final_project386).
 
-Streamlit Interactive app #INPUT HERE#
+Streamlit Interactive app [here](https://finalproject386-qpuktjzfa562fbmkaycd9v.streamlit.app/)
 
 Documentation [here](Documentation.qmd).
 
 Tutorial [here](Tutorial.qmd).
 
 Technical Report [here](TechnicalReport.qmd).
+
+Python Packaage [here](https://pypi.org/project/final-project-demo/0.1.0/).

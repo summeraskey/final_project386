@@ -1,9 +1,8 @@
 project:
   type: website
   output-dir: docs
-
 website:
-  title: "website"
+  title: "YouTube Performance Analysis"
   navbar:
     left:
       - href: index.qmd
@@ -14,12 +13,11 @@ website:
         text: Tutorial
       - href: TechnicalReport.qmd
         text: Technical Report
-
 format:
   html:
     theme:
       - cosmo
-      - brand
+      - custom.scss
     css: styles.css
     toc: true
 

@@ -1,19 +1,169 @@
 ---
-title: "Getting Started"
-jupyter: python3
+title: "Tutorial"
 ---
 
-Here is how you use my package:
+This tutorial walks you through how to install and use the `final_project_demo` package to collect, clean, and analyze YouTube trending video data. By the end you will have a fully merged dataset and a complete set of EDA and modeling outputs.
 
-```{python}
-from final_project_demo import add
+## Setup
 
-print(add(2, 19))
+First, make sure you have the package installed and your environment set up. Clone the repository and install the dependencies:
+
+```bash
+git clone https://github.com/summeraskey/final_project386.git
+cd final_project386
+uv venv
+source .venv/bin/activate
+uv sync
 ```
 
+You will also need to create a `.env` file in the root of the project with the following keys:
 
-```{python}
-from final_project_demo import run_analysis_pipeline, run_cleaning_pipeline
+```
+YOUTUBE_API_KEY=your_youtube_api_key
+KAGGLE_USERNAME=your_kaggle_username
+KAGGLE_KEY=your_kaggle_api_key
+```
+
+You can get a YouTube API key from the [Google Cloud Console](https://console.cloud.google.com) and your Kaggle credentials from your [Kaggle account settings](https://www.kaggle.com/settings).
+
+## Loading and Cleaning the Data
+
+The first step is to load and clean the data using the `run_cleaning_pipeline()` function. This downloads the Kaggle dataset, fetches current statistics from the YouTube API, merges them together, and returns a clean DataFrame ready for analysis.
+
+```python
+from final_project_demo import run_cleaning_pipeline
+df = run_cleaning_pipeline()
+print(df.shape)
+print(df.head())
+```
+
+The cleaned DataFrame has 37,095 rows and 20 columns. Each row represents one trending appearance of a video, with columns for both the original 2017 engagement stats and the current stats pulled from the API. Here is what the columns look like:
+
+- `video_id` — unique 11-character YouTube video identifier
+- `trending_date` — date the video appeared on the trending list
+- `title` — video title
+- `channel_title` — name of the channel that posted the video
+- `category_id` — numeric category code (e.g. 10 = Music, 24 = Entertainment)
+- `publish_time` — original publish datetime
+- `views_2017`, `likes_2017`, `comments_2017` — engagement counts at time of trending
+- `views_current`, `likes_current`, `comments_current` — current engagement counts from the API
+
+## Running the EDA
+
+Once you have the cleaned DataFrame, you can run the full exploratory analysis using `run_analysis_pipeline(df)`. This runs all five EDA functions and all three predictive models in sequence.
+
+```python
+from final_project_demo import run_cleaning_pipeline, run_analysis_pipeline
 df = run_cleaning_pipeline()
 run_analysis_pipeline(df)
+```
+
+You can also run individual EDA functions if you only want a specific analysis. Here is how to use each one.
+
+### Growth Analysis
+
+This function computes how much each video has grown in views, likes, and comments since 2017 and plots the distribution. It deduplicates the dataset to one row per video before computing growth so each video is only counted once.
+
+```python
+from final_project_demo.analysis import growth_analysis
+df_unique = growth_analysis(df)
+```
+
+The top growing videos are almost all music videos — Ed Sheeran's "Perfect" and Maroon 5's "Girls Like You" each gained over 4 billion views since 2017. The median video grew by about 1.6 million views, but the distribution is heavily right-skewed with a small number of viral outliers pulling the mean much higher.
+
+### Trending Patterns
+
+This function analyzes when videos tend to appear on the trending list, broken down by day of the week and by month.
+
+```python
+from final_project_demo.analysis import trending_patterns
+trending_patterns(df)
+```
+
+Trending frequency is almost perfectly uniform across all seven days of the week, suggesting YouTube's algorithm doesn't favor any particular day. The monthly chart reflects the coverage window of the dataset, November 2017 through June 2018, rather than true seasonal patterns.
+
+### Category Analysis
+
+This function computes and plots the average current view count for each of the 15 YouTube content categories.
+
+```python
+from final_project_demo.analysis import category_analysis
+category_analysis(df)
+```
+
+Music dominates by a wide margin, averaging over 1 billion views per video — roughly 10x more than the next category, Film & Animation. This reflects the long tail popularity of music videos, which continue accumulating views for years after release.
+
+### Engagement Analysis
+
+This function computes and plots the average like rate (likes divided by views) for each category, giving a picture of which content types generate the most active audience engagement.
+
+```python
+from final_project_demo.analysis import engagement_analysis
+engagement_analysis(df)
+```
+
+Interestingly, Music ranks in the middle of the pack for like rate despite dominating in total views. People & Blogs has the highest like rate at about 2.8%, followed by Nonprofits & Activism and Comedy — categories where audiences tend to be more personally invested in the content.
+
+### Time to Trend
+
+This function calculates how many days passed between a video's publish date and its first appearance on the trending list.
+
+```python
+from final_project_demo.analysis import time_to_trend_analysis
+time_to_trend_analysis(df)
+```
+
+Most videos trend within 1-2 days of being published, with the count dropping off sharply after day 5. Videos that haven't trended within a week of publishing almost never do. The median time to trend is just 1 day.
+
+## Running the Models
+
+The three predictive models can also be run individually. Each one prints the R² score and MAE, saves predicted vs. actual and feature importance plots to your working directory, and returns the trained model object.
+
+### Model 1: Predict Current Views
+
+This model predicts a video's current view count from its 2017 engagement metrics — likes, dislikes, comments, category, and whether comments or ratings were disabled. The target is log-transformed to handle the skewed distribution of view counts.
+
+```python
+from final_project_demo.analysis import predict_current_views
+model1 = predict_current_views(df)
+```
+
+Model 1 achieved an R² of 0.679, meaning it explains about 68% of the variance in current views. Early likes are by far the most important feature at 71% importance, with dislikes and comments each contributing around 10%. This suggests that initial audience enthusiasm is the strongest signal of a video's long term success.
+
+### Model 2: Predict Time to Trend
+
+This model predicts how quickly a video trends after publishing. In addition to the 2017 engagement metrics, it also uses the hour and day of week the video was published, since upload timing may influence how quickly the algorithm picks it up.
+
+```python
+from final_project_demo.analysis import predict_time_to_trend
+model2 = predict_time_to_trend(df)
+```
+
+Model 2 achieved an R² of 0.274, lower than the other two models, which makes sense since viral timing contains a lot of randomness that early metrics can't fully capture. Comments were the top feature at 29%, followed closely by likes and views. Publish hour contributed about 13%, suggesting that the time of day you upload does have some influence on how quickly a video gets picked up.
+
+### Model 3: Predict View Growth
+
+This model predicts how much a video's view count has grown since 2017, using the original 2017 stats and the video's time to trend as features.
+
+```python
+from final_project_demo.analysis import predict_view_growth
+model3 = predict_view_growth(df)
+```
+
+Model 3 achieved an R² of 0.669, similar to Model 1. Early likes again dominated at 62% importance. Interestingly, time to trend only contributed 3%, suggesting that how fast a video trended doesn't have much bearing on how much it grows in the long run.
+
+## Summary
+
+| Step | Function | Output |
+|---|---|---|
+| Load & clean data | `run_cleaning_pipeline()` | Merged DataFrame |
+| Growth analysis | `growth_analysis(df)` | Summary stats + plot |
+| Trending patterns | `trending_patterns(df)` | 2 bar charts |
+| Category analysis | `category_analysis(df)` | Bar chart |
+| Engagement analysis | `engagement_analysis(df)` | Bar chart |
+| Time to trend | `time_to_trend_analysis(df)` | Histogram |
+| Predict current views | `predict_current_views(df)` | Model + plots |
+| Predict time to trend | `predict_time_to_trend(df)` | Model + plots |
+| Predict view growth | `predict_view_growth(df)` | Model + plots |
+| Run everything | `run_analysis_pipeline(df)` | All of the above |
 ```
